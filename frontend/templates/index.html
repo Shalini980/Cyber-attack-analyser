@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyber Attack Analyser</title>
+  <meta name="description" content="Advanced vulnerability scanning and cyber attack analysis tool" />
+  <meta name="author" content="Cyber Security Team" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="root">
+    <header>
+      <h1>Cyber Attack Analyser</h1>
+      <p>Scan your system for vulnerabilities and analyze potential threats in real-time.</p>
+    </header>
+
+    <section>
+      <h2>Start a New Scan</h2>
+      <form method="POST">
+        <label for="url">Enter URL or IP:</label>
+        <input type="text" id="url" name="url" placeholder="e.g., https://yourwebsite.com" required />
+
+        <label for="scanType">Select Scan Type:</label>
+        <select id="scanType" name="scanType">
+          <option value="quick">Quick Scan</option>
+          <option value="full">Full Scan</option>
+          <option value="custom">Custom Scan</option>
+        </select>
+
+        <button type="submit">🚀 Start Scan</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Scan Results</h2>
+      <div id="results">
+        {% if url and scanType %}
+          <p>🔍 Scanning <strong>{{ url }}</strong> using <em>{{ scanType }}</em> scan...</p>
+          <p>🛡️ Analyzing for vulnerabilities...</p>
+          <p>✅ This is a simulated scan. Real-time functionality will appear here soon!</p>
+        {% else %}
+          <p>No scans yet. Results will be displayed here.</p>
+        {% endif %}
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 AVINYA | All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>

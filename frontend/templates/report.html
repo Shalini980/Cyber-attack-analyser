@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Security Threat Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f1a23, #001a26);
+  font-family: 'Orbitron', sans-serif;
+  color: #cceeee;
+  padding: 2rem;
+  /* Add smooth font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+  h1 {
+  text-align: center;
+  color: #00ffff;
+  font-size: 2.8rem;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 0 15px #00ffffaa, 0 0 20px #00ffffcc;
+  letter-spacing: 2px;
+}
+
+   .summary-box {
+  display: flex;
+  align-items: center;
+  padding: 2.5rem 3rem;
+  border-radius: 20px;
+  margin-bottom: 3rem;
+  box-shadow: 0 0 30px #00ffff44 inset;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: saturate(180%) blur(12px);
+}
+
+    
+.summary-box.safe {
+  background: linear-gradient(135deg, #004d29, #006633);
+  color: #b8ffc8;
+  box-shadow: 0 0 30px #00ff88cc;
+}
+    .summary-box.moderate {
+  background: linear-gradient(135deg, #665900, #aa8000);
+  color: #ffe080;
+  box-shadow: 0 0 30px #ffaa00cc;
+}
+  .summary-box.unsafe {
+  background: linear-gradient(135deg, #660000, #aa2222);
+  color: #ffaaaa;
+  box-shadow: 0 0 30px #ff4444cc;
+}
+
+  .status-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background-color: rgba(18, 22, 31, 0.8);
+  color: inherit;
+  border: 7px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2.5rem;
+  text-shadow: 0 0 15px currentColor;
+  box-shadow: 0 0 15px currentColor;
+  flex-shrink: 0;
+}
+
+   .summary-text h2 {
+  font-size: 2rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+}
+
+.summary-text p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  max-width: 550px;
+}
+
+.chart-severity-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+  .vuln-chart-container {
+  flex: 1 1 320px;
+  max-width: 400px;
+  background: rgba(18, 22, 31, 0.85);
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00ffff55 inset;
+  padding: 1rem 1.2rem;
+  transition: box-shadow 0.3s ease;
+}
+.vuln-chart-container:hover {
+  box-shadow: 0 0 40px #00ffffbb inset;
+}
+
+.severity-breakdown {
+  flex: 1 1 220px;
+  max-width: 280px;
+  background: rgba(18, 22, 31, 0.85);
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00ffff55 inset;
+  padding: 1rem 1.5rem;
+}
+
+.severity-breakdown h2 {
+  font-size: 1.6rem;
+  color: #00ffff;
+  border-bottom: 2px solid #00ffff77;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.05em;
+}
+    
+   .severity-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.severity-card {
+  padding: 0.8rem;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 0 15px #00ffff44 inset;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  transition: transform 0.2s ease;
+  cursor: default;
+}
+
+  .severity-card.Critical { background-color: #7b0000; color: #ff8888; }
+.severity-card.High { background-color: #a36f00; color: #ffbd57; }
+.severity-card.Medium { background-color: #998000; color: #fff299; }
+.severity-card.Low { background-color: #2a5a1a; color: #d0f0b4; }
+.severity-card.Info { background-color: #004d66; color: #a0dfff; }
+
+.severity-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px #00ffffaa inset;
+}
+
+  .vuln-report h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #00ffff88;
+  color: #00ffff;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.vuln-list {
+  list-style-type: none;
+  padding: 0;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.vuln-list li {
+  background: rgba(18, 22, 31, 0.9);
+  border-radius: 15px;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 15px #00ffff55 inset;
+  color: #00ffffcc;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  transition: background-color 0.3s ease;
+}
+
+   .vuln-list li strong {
+  color: #00ffffdd;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.vuln-list li:hover {
+  background-color: #001f29;
+  box-shadow: 0 0 20px #00ffffaa inset;
+}
+
+canvas {
+  max-height: 280px !important;
+  user-select: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .summary-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .summary-box .status-circle {
+    margin-bottom: 1.5rem;
+    margin-right: 0;
+    width: 120px;
+    height: 120px;
+    font-size: 1.8rem;
+  }
+  .summary-text h2 {
+    font-size: 1.7rem;
+  }
+  .summary-text p {
+    font-size: 1.1rem;
+  }
+  .chart-severity-container {
+    flex-direction: column;
+    gap: 1.8rem;
+  }
+  .vuln-chart-container,
+  .severity-breakdown {
+    max-width: 100%;
+    flex: none;
+  }
+}
+    
+  </style>
+</head>
+<body>
+  <h1>Security Threat Report</h1>
+
+  <!-- Verdict Summary Box -->
+  <div class="summary-box {{ status }}">
+    <div class="status-circle">{{ status|capitalize }}</div>
+    <div class="summary-text">
+      <h2>{{ verdict_message }}</h2>
+      <p>This website is <strong>{{ status }}</strong>. {{ additional_info }}</p>
+    </div>
+  </div>
+
+  <!-- Chart + Severity -->
+  <div class="chart-severity-container">
+    <div class="vuln-chart-container">
+      <canvas id="vulnChart"></canvas>
+    </div>
+
+    <div class="severity-breakdown">
+      <h2>Vulnerabilities by Severity</h2>
+      <div class="severity-column">
+        <div class="severity-card Critical">Critical: {{ severity.critical }}</div>
+        <div class="severity-card High">High: {{ severity.high }}</div>
+        <div class="severity-card Medium">Medium: {{ severity.medium }}</div>
+        <div class="severity-card Low">Low: {{ severity.low }}</div>
+        <div class="severity-card Info">Info: {{ severity.info }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vulnerability List -->
+  <section class="vuln-report">
+    <h2>Identified Vulnerabilities</h2>
+    <ul class="vuln-list">
+      {% for vuln in vulnerabilities %}
+        <li><strong>{{ vuln.cve }}</strong>: {{ vuln.desc }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- Chart Script -->
+  <script>
+    const ctx = document.getElementById('vulnChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Critical', 'High', 'Medium', 'Low', 'Info'],
+        datasets: [{
+          label: 'Vulnerabilities',
+          data: [
+            {{ severity.critical }},
+            {{ severity.high }},
+            {{ severity.medium }},
+            {{ severity.low }},
+            {{ severity.info }}
+          ],
+          backgroundColor: ['#ff4c4c', '#ff9900', '#ffdd57', '#66cc66', '#66d9ef'],
+          borderColor: '#0f1a23',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#cceeee'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
